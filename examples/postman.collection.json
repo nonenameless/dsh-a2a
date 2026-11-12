@@ -1,0 +1,252 @@
+{
+  "info": {
+    "_postman_id": "dsh-a2a-0000-0000-0000-000000000001",
+    "name": "DSH A2A",
+    "description": "Inbound A2A server checks for @local/dsh-a2a. Set baseUrl and token collection variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:3080"
+    },
+    {
+      "key": "token",
+      "value": "replace-with-your-token"
+    },
+    {
+      "key": "taskId",
+      "value": "replace-with-a-task-id"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Discovery",
+      "item": [
+        {
+          "name": "Agent Card (legacy primary)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/.well-known/agent.json",
+              "host": ["{{baseUrl}}"],
+              "path": [".well-known", "agent.json"]
+            }
+          },
+          "auth": { "type": "noauth" }
+        },
+        {
+          "name": "Agent Card (0.3 canonical alias)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/.well-known/agent-card.json",
+              "host": ["{{baseUrl}}"],
+              "path": [".well-known", "agent-card.json"]
+            }
+          },
+          "auth": { "type": "noauth" }
+        },
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/a2a/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["a2a", "health"]
+            }
+          },
+          "auth": { "type": "noauth" }
+        }
+      ]
+    },
+    {
+      "name": "JSON-RPC 0.3",
+      "item": [
+        {
+          "name": "message/send",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.result && body.result.id) pm.collectionVariables.set('taskId', body.result.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "content-type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"send-1\",\n  \"method\": \"message/send\",\n  \"params\": {\n    \"message\": {\n      \"kind\": \"message\",\n      \"messageId\": \"msg-1\",\n      \"role\": \"user\",\n      \"parts\": [{ \"kind\": \"text\", \"text\": \"List the top-level directories.\" }]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/a2a",
+              "host": ["{{baseUrl}}"],
+              "path": ["a2a"]
+            }
+          }
+        },
+        {
+          "name": "message/stream (SSE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "content-type", "value": "application/json" },
+              { "key": "accept", "value": "text/event-stream" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"stream-1\",\n  \"method\": \"message/stream\",\n  \"params\": {\n    \"message\": {\n      \"kind\": \"message\",\n      \"messageId\": \"msg-stream-1\",\n      \"role\": \"user\",\n      \"parts\": [{ \"kind\": \"text\", \"text\": \"Summarize this repository.\" }]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/a2a",
+              "host": ["{{baseUrl}}"],
+              "path": ["a2a"]
+            }
+          }
+        },
+        {
+          "name": "tasks/get",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "content-type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"get-1\",\n  \"method\": \"tasks/get\",\n  \"params\": { \"id\": \"{{taskId}}\", \"historyLength\": 20 }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/a2a",
+              "host": ["{{baseUrl}}"],
+              "path": ["a2a"]
+            }
+          }
+        },
+        {
+          "name": "tasks/cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "content-type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"cancel-1\",\n  \"method\": \"tasks/cancel\",\n  \"params\": { \"id\": \"{{taskId}}\" }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/a2a",
+              "host": ["{{baseUrl}}"],
+              "path": ["a2a"]
+            }
+          }
+        },
+        {
+          "name": "tasks/resubscribe",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "content-type", "value": "application/json" },
+              { "key": "accept", "value": "text/event-stream" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"resub-1\",\n  \"method\": \"tasks/resubscribe\",\n  \"params\": { \"id\": \"{{taskId}}\" }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/a2a",
+              "host": ["{{baseUrl}}"],
+              "path": ["a2a"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "JSON-RPC 0.2 compatibility",
+      "item": [
+        {
+          "name": "tasks/send",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "content-type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"legacy-1\",\n  \"method\": \"tasks/send\",\n  \"params\": {\n    \"id\": \"legacy-task-1\",\n    \"sessionId\": \"legacy-ctx-1\",\n    \"message\": {\n      \"role\": \"user\",\n      \"messageId\": \"legacy-msg-1\",\n      \"parts\": [{ \"kind\": \"text\", \"text\": \"Say hello.\" }]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/a2a",
+              "host": ["{{baseUrl}}"],
+              "path": ["a2a"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Failure paths",
+      "item": [
+        {
+          "name": "Unauthorized (no token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "content-type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"jsonrpc\":\"2.0\",\"id\":\"unauth\",\"method\":\"tasks/get\",\"params\":{\"id\":\"x\"}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/a2a",
+              "host": ["{{baseUrl}}"],
+              "path": ["a2a"]
+            }
+          },
+          "auth": { "type": "noauth" }
+        },
+        {
+          "name": "Push notifications unsupported",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "content-type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"jsonrpc\":\"2.0\",\"id\":\"push\",\"method\":\"tasks/pushNotificationConfig/list\",\"params\":{\"id\":\"x\"}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/a2a",
+              "host": ["{{baseUrl}}"],
+              "path": ["a2a"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

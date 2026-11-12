@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="A2A network">
+  <defs>
+    <linearGradient id="a2a-edge" x1="16" y1="22" x2="48" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#0b1220"/>
+  <path d="M22 23.5h20M42 23.5l-4.5-4.5M42 23.5l-4.5 4.5" fill="none" stroke="url(#a2a-edge)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 40.5H22M22 40.5l4.5-4.5M22 40.5l4.5 4.5" fill="none" stroke="url(#a2a-edge)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="16" cy="23.5" r="6.5" fill="#0b1220" stroke="#3b82f6" stroke-width="3"/>
+  <circle cx="48" cy="40.5" r="6.5" fill="#0b1220" stroke="#14b8a6" stroke-width="3"/>
+  <circle cx="48" cy="23.5" r="3" fill="#93c5fd"/>
+  <circle cx="16" cy="40.5" r="3" fill="#5eead4"/>
+</svg>

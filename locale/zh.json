@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "A2A",
+    "description": "让 DeepSeek Harness 同时连接多个 Agent2Agent 对端：入站按 peer 分配独立令牌，出站节点各有自己的凭据，兼容 A2A 0.2/0.3 与 1.0（protoJSON）两套协议，并把远端 skill 挂成本地工具。双向工具调用已用 OpenClaw 与 Hermes 实测通过。"
+  }
+}

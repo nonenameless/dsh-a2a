@@ -1,0 +1,21 @@
+# DSH bundle patch: one Host row and one Client row are derived from this
+# insertion. The package name must equal the installed bundle package.
+- insert:
+    - id: dsh-a2a
+      name: '@jasper_alaric/dsh-a2a'
+      config:
+        server:
+          enabled: true
+          # 'bearer' keeps the endpoint closed until a token exists. Set the
+          # legacy token with the settings panel or DSH_A2A_TOKEN; per-peer
+          # tokens are stored as dsh-a2a/peer-<id> credential records.
+          auth:
+            mode: bearer
+            peers:
+              - id: openclaw
+                tokenEnv: OPENCLAW_A2A_TOKEN
+              - id: hermes
+                tokenEnv: HERMES_A2A_TOKEN
+        client:
+          enabled: true
+          nodes: []

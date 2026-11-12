@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "A2A",
+    "description": "Connect DeepSeek Harness to several Agent2Agent peers at once: per-peer inbound tokens, outbound nodes with their own credentials, A2A 0.2/0.3 and 1.0 (protoJSON) compatibility, and remote skills mounted as local tools. Bidirectional tool calls are verified against OpenClaw and Hermes."
+  }
+}
